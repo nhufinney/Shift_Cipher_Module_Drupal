@@ -50,3 +50,37 @@ function shift_cipher_form() {
 
     return $form;
 }
+
+//save input values in $_SESSION
+function shift_cipher_form_submit($form, &$form_state) {
+    $shift_value = $form_state['values']['shift_value'];
+    $shift_direction = $form_state['values']['shift_direction'];
+    $shift_phrase = $form_state['values']['shift_phrase'];
+
+    $_SESSION['shift_value'] = $shift_value;
+    $_SESSION['shift_direction']= $shift_direction;
+    $_SESSION['shift_phrase']= $shift_phrase;
+
+    $form_state['redirect'] = 'shift_cipher_results';
+}
+
+//Validation the text input
+function element_validate_text_word($element) {
+    if(preg_match('/[^a-zA-Z ]/', $element['#value'])) {
+        form_error($element, t('Only letters and spaces are accepted.'));
+    }
+}
+
+//Validation the direction input, must be 'right' or 'left'
+function element_validate_direction_word($element) {
+    $valid_direction = array(
+
+        'right', 'left',
+        'Right', 'Left',
+        'RIGHT', 'LEFT',
+    );
+
+    if (!in_array(strtoupper($element['#value']), $valid_direction)){
+        form_error($element, t('Please enter just only "right" or "left"'));
+    }
+}
