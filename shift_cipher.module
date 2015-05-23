@@ -1,0 +1,52 @@
+<?php
+
+function shift_cipher_menu() {
+    $items = array();
+    $items['shift-cipher-form'] = array(
+        'title' => 'Shift Cipher Form',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('shift_cipher_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+
+    $items['shift_cipher_results'] = array(
+        'title' => 'Result Phrase',
+        'page callback' => 'shift_cipher_results',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+
+    return $items;
+}
+
+//create an input form
+function shift_cipher_form() {
+    $form['shift_value'] = array(
+        '#title' => 'Shift value',
+        '#type' => 'textfield',
+        '#description' => t('Enter shift value, positive number only: '),
+        '#element_validate' => array('element_validate_integer_positive'),
+        '#required' => TRUE,
+    );
+    $form['shift_direction'] = array(
+        '#title' => 'Shift direction',
+        '#type' => 'textfield',
+        '#description' => t('Enter shift direction, right or left: '),
+        '#element_validate' => array('element_validate_text_word', 'element_validate_direction_word'),
+        '#required' => TRUE,
+    );
+    $form['shift_phrase'] = array(
+        '#title' => 'Shift phrase',
+        '#type' => 'textfield',
+        '#description' => t('Enter shift phrase, no special characters please: '),
+        '#element_validate' => array('element_validate_text_word'),
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit',
+    );
+
+    return $form;
+}
