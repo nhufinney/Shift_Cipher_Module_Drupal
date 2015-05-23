@@ -84,3 +84,101 @@ function element_validate_direction_word($element) {
         form_error($element, t('Please enter just only "right" or "left"'));
     }
 }
+
+function shift_cipher_results(){
+    $shift_value = $_SESSION['shift_value'];
+
+    $shift_direction = $_SESSION['shift_direction'];
+    $shift_direction = strtolower($shift_direction);
+
+    $shift_phrase = $_SESSION['shift_phrase'];
+    $shift_phrase = strtolower($shift_phrase);
+    $shift_phrase = explode(" ", $shift_phrase);
+    $origin_phrase = implode(" ", $shift_phrase);
+
+    $temporary = array();
+    $temp = array();
+    $result = array();
+    $final = array();
+    $index ="";
+    $new_character = "";
+    $number=0;
+    $alphabet = array (
+        '',
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+        'k',
+        'l',
+        'm',
+        'n',
+        'o',
+        'p',
+        'q',
+        'r',
+        's',
+        't',
+        'u',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z'
+    );
+
+    //for each loop of each input word
+    foreach($shift_phrase as $one_word){
+        $one_word = str_split($one_word);
+
+        //for each loop of each character in each input word
+        foreach ($one_word as $one_character){
+            for ($i = 1; $i <= 26; $i++){
+                if ($one_character == $alphabet[$i])
+                {
+
+                    if ($shift_direction == 'left'){
+                        if ($i <= $shift_value){
+                            $index= 26 - ($shift_value - $i);
+                        } else {
+                            $index = $i - $shift_value;
+                        }
+
+                    };
+
+                    if ($shift_direction == 'right'){
+                        if (($i + $shift_value) >= 26){
+                            $index= $i + $shift_value - 26;
+                        } else {
+                            $index = $i + $shift_value;
+                        }
+
+                    };
+
+                }; //close if
+            }//close foreach of $one_word
+
+            //push the new character into output array
+            array_push($temporary, $alphabet[$index]);
+            $index=0;
+
+        }; //close foreach of $one_word
+
+        $temp = implode('', $temporary);
+        $temporary=array();
+        array_push($result, $temp);
+        $temp=array();
+
+    }; //close foreach of $shift_phrase
+
+    $final = implode(" ", $result);
+
+    return "$shift_value from the $shift_direction direction of the phrase <strong>$origin_phrase</strong> is: <p><strong> '$final' </strong></p>";
+
+}// close of the function
